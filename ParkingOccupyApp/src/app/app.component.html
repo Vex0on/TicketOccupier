@@ -6,8 +6,10 @@
       <div class="left-side">
         <h1>Parking Occupation App</h1>
         <p>Lista miejsc parkingowych:</p>
-        <div *ngFor="let spot of parkSpots$ | async">
-          <p>{{ spot.ParkingNumber }} - {{ spot.registration }} - {{ spot.isOccupied }}</p>
+      </div>
+      <div class="parking-container">
+        <div *ngFor="let spot of parkSpots$ | async" class="parking-spot">
+          <p>Miejsce {{ spot.ParkingNumber }} - {{ spot.registration }} - {{ spot.isOccupied }}</p>
         </div>
       </div>
     </div>

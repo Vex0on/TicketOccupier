@@ -6,7 +6,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+  
   .background {
     position: fixed;
     top: 0;
@@ -27,6 +27,7 @@
     height: 100vh;
     margin: 0;
     background-color: transparent;
+    overflow-y: auto;
   }
   
   .left-side {
@@ -34,16 +35,15 @@
     color: white; 
   }
   
-  h1 {
+  h1, p {
     margin-top: 0;
-  }
-  
-  .content {
-    text-align: center;
-  }
-  
-  p {
     color: white;
-    margin-top: 1rem;
+  }
+  
+  .parking-spot {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
   }
   
