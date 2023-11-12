@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="https://unpkg.com/primeflex@^3/primeflex.css">
+
+<div class="background">
+  <div class="main">
+    <div class="content">
+      <div class="left-side">
+        <h1>Parking Occupation App</h1>
+        <p>Lista miejsc parkingowych:</p>
+        <div *ngFor="let spot of parkSpots$ | async">
+          <p>{{ spot.ParkingNumber }} - {{ spot.registration }} - {{ spot.isOccupied }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

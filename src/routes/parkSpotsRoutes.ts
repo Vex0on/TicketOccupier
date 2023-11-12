@@ -47,8 +47,10 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.get("/", async (req: Request, res: Response) => {
     const data = await connectDB.getRepository(ParkSpot).find();
-    res.json(data);
+    const sortedData = data.sort((a, b) => a.ParkingNumber - b.ParkingNumber);
+    res.json(sortedData);
 })
+
 
 router.get("/:id", async (req: Request, res: Response) => {
     try {
