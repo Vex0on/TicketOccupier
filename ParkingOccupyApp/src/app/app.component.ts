@@ -20,4 +20,28 @@ export class AppComponent {
     ngOnInit(): void {
       this.parkSpots$ = this.dataService.getParkSpots();
     }
-}
+
+    releaseParkSpot(id: number): void {
+      this.dataService.releaseParkSpot(id).subscribe(
+        response => {
+          console.log('Parking spot released successfully!', response);
+          this.parkSpots$ = this.dataService.getParkSpots();
+        },
+        error => {
+          console.error('Error releasing parking spot:', error);
+        }
+      );
+    }
+
+    showHistory(id: number): void {
+      this.dataService.getSpotHistory(id).subscribe(
+        history => {
+          console.log('Spot history:', history);
+        },
+        error => {
+          console.error('Error fetching spot history:', error);
+        }
+      );
+    }
+  }
+

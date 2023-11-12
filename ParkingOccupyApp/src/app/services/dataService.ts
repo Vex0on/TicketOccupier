@@ -9,7 +9,7 @@ export class DataService {
 
   constructor() {}
 
-  getParkSpots(): Observable<any> {
+  getParkSpots(): Observable<any[]> {
     console.log('Getting park spots...');
     return new Observable(observer => {
       fetch(`${this.apiUrl}/parkSpots`)
@@ -21,6 +21,43 @@ export class DataService {
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          observer.error(error);
+        });
+    });
+  }
+
+  getSpotHistory(id: number): Observable<any> {
+    return new Observable(observer => {
+      fetch(`${this.apiUrl}/parkSpots/${id}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log('Received history data:', data);
+          observer.next(data);
+          observer.complete();
+        })
+        .catch(error => {
+          console.error('Error fetching spot history:', error);
+          observer.error(error);
+        });
+    });
+  }
+
+  releaseParkSpot(id: number): Observable<any> {
+    return new Observable(observer => {
+      fetch(`${this.apiUrl}/parkSpots/release/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Received data:', data);
+          observer.next(data);
+          observer.complete();
+        })
+        .catch(error => {
+          console.error('Error releasing parking spot:', error);
           observer.error(error);
         });
     });

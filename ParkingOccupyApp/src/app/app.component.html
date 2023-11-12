@@ -9,7 +9,10 @@
       </div>
       <div class="parking-container">
         <div *ngFor="let spot of parkSpots$ | async" class="parking-spot">
-          <p>Miejsce {{ spot.ParkingNumber }} - {{ spot.registration }} - {{ spot.isOccupied }}</p>
+          <p>{{ spot.ParkingNumber }} - {{ spot.registration }} - {{ spot.isOccupied }}</p>
+          <button type="button" class="btn">Zajmij</button>
+          <button *ngIf="spot.isOccupied" type="button" class="btn" (click)="releaseParkSpot(spot.id)">Zwolnij</button>
+          <button type="button" class="btn" (click)="showHistory(spot.id)">Historia</button>
         </div>
       </div>
     </div>
