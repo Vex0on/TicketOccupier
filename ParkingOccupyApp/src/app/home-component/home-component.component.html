@@ -9,10 +9,16 @@
       </div>
       <div class="parking-container">
         <div *ngFor="let spot of parkSpots$ | async" class="parking-spot">
-          <p>{{ spot.ParkingNumber }} - {{ spot.registration }} - {{ spot.isOccupied }}</p>
-          <button type="button" class="btn">Zajmij</button>
+          <p>{{ spot.ParkingNumber }} - {{ spot.registration }} - 
+            <span [innerHTML]="spot.isOccupied ? '&#10060;' : '&#9989;'"></span>
+          </p>
+          <button *ngIf="!spot.isOccupied" type="button" class="btn" (click)="visibleUpdateForms[spot.id] = true">Zajmij</button>
           <button *ngIf="spot.isOccupied" type="button" class="btn" (click)="releaseParkSpot(spot.id)">Zwolnij</button>
-          <button type="button" class="btn" (click)="navigateToHistory(spot.id)">Historia</button>
+          <button type="button" class="btn" [routerLink]="['/history', spot.id]">Historia</button>
+          <div *ngIf="visibleUpdateForms[spot.id]" class="update-form">
+            <input type="text" [(ngModel)]="registrationToUpdate" placeholder="Podaj nr rejestracji">
+            <button type="button" class="btn btn-update" (click)="updateRegistration(spot)">Potwierdź</button>
+          </div>
         </div>
       </div>
     </div>

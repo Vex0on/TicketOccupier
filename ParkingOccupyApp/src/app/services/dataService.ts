@@ -49,7 +49,7 @@ export class DataService {
         });
     });
   }
-  
+
   releaseParkSpot(id: number): Observable<any> {
     return new Observable(observer => {
       fetch(`${this.apiUrl}/parkSpots/release/${id}`, {
@@ -70,4 +70,27 @@ export class DataService {
         });
     });
   }
+
+  updateRegistration(id: number, registration: string): Observable<any> {
+    return new Observable((observer) => {
+      fetch(`${this.apiUrl}/parkSpots/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ registration }),
+      })
+        .then((response) => this.handleResponse(response))
+        .then((data) => {
+          console.log('Received data:', data);
+          observer.next(data);
+          observer.complete();
+        })
+        .catch((error) => {
+          console.error('Error updating registration:', error);
+          observer.error(error);
+        });
+    });
+  }
+  
 }

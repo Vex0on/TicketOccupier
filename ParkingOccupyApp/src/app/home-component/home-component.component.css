@@ -51,3 +51,34 @@
     border-radius: 10px;
     padding: 10px;
   }
+
+  .parking-spot .status-icon {
+    margin-left: auto;
+  }
+
+.btn {
+  margin-right: 8px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-update {
+  background-color: #28a745;
+}
+
+.update-form {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.update-form input {
+  margin-right: 8px;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
