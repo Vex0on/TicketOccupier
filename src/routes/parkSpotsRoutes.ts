@@ -1,5 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import { ParkSpot } from "../Entities/ParkSpots";
+import { ParkSpotHistory } from "../Entities/ParkSpotHistory";
 import connectDB from "../../config/ormconfig";
 
 const app = express();
@@ -10,22 +11,13 @@ const router = Router();
 router.post("/", async (req: Request, res: Response) => {
     try {
         const repository = connectDB.getRepository(ParkSpot);
-
-        const existingRecord = await repository.findOne({
-            where: { registration: req.body.registration }
+        const existingParkingSpot = await repository.findOne({
+            where: { ParkingNumber: req.body.ParkingNumber }
         });
 
-        const existingOccupiedSpot = await repository.findOne({
-            where: { ParkingNumber: req.body.ParkingNumber, isOccupied: true }
-        });
-
-        if (existingRecord) {
+        if (existingParkingSpot) {
             res.json({
-                error: "Record with this registration number already exists."
-            });
-        } else if (existingOccupiedSpot) {
-            res.json({
-                error: "Parking spot is already occupied."
+                error: "Parking spot with this number already exists."
             });
         } else {
             const newParkingSpot = new ParkSpot();
@@ -34,6 +26,12 @@ router.post("/", async (req: Request, res: Response) => {
             newParkingSpot.isOccupied = req.body.isOccupied || false;
 
             await repository.save(newParkingSpot);
+
+            const historyEntry = new ParkSpotHistory();
+            historyEntry.registration = req.body.registration;
+            historyEntry.parkSpot = newParkingSpot;
+
+            await connectDB.getRepository(ParkSpotHistory).save(historyEntry);
 
             res.json({
                 message: "Values inserted successfully!"
@@ -46,37 +44,118 @@ router.post("/", async (req: Request, res: Response) => {
     }
 });
 
+
 router.get("/", async (req: Request, res: Response) => {
     const data = await connectDB.getRepository(ParkSpot).find();
     res.json(data);
 })
 
 router.get("/:id", async (req: Request, res: Response) => {
-    const data = await connectDB.getRepository(ParkSpot).findOneBy({
-        id: parseInt(req.params.id)
-    });
-    res.json(data);
-})
+    try {
+        const parkSpotRepository = connectDB.getRepository(ParkSpot);
+        const parkSpot = await parkSpotRepository.findOne({
+            where: { id: parseInt(req.params.id) },
+            relations: ["history"],
+        });
+
+        if (parkSpot) {
+            res.json(parkSpot);
+        } else {
+            res.json({
+                error: "Parking spot not found.",
+            });
+        }
+    } catch (err) {
+        res.json({
+            error: err
+        });
+    }
+});
+
 
 router.put("/:id", async (req: Request, res: Response) => {
-    const parkSpot =  await connectDB.getRepository(ParkSpot).findOne({where: {id: parseInt(req.params.id)}})
+    try {
+        const parkSpotRepository = connectDB.getRepository(ParkSpot);
+        const parkSpot = await parkSpotRepository.findOne({
+            where: { id: parseInt(req.params.id) },
+            relations: ["history"],
+        });
 
-    if (parkSpot != null) {
-        connectDB.getRepository(ParkSpot).merge(parkSpot, req.body);
+        if (parkSpot) {
+            if (parkSpot.isOccupied) {
+                res.json({
+                    error: "Cannot update registration number for an occupied parking spot.",
+                });
+            } else {
+                const newRegistration = req.body.registration;
+                if (!newRegistration) {
+                    res.json({
+                        error: "Invalid registration number.",
+                    });
+                } else {
+                    const existingRecord = await parkSpotRepository.findOne({
+                        where: { registration: newRegistration, isOccupied: true },
+                    });
 
-        await connectDB.getRepository(ParkSpot).save(parkSpot);
+                    if (existingRecord) {
+                        res.json({
+                            error: "Registration number already in use for another occupied parking spot.",
+                        });
+                    } else {
+                        parkSpot.registration = newRegistration;
+                        await parkSpotRepository.save(parkSpot);
+                        const historyEntry = new ParkSpotHistory();
+                        historyEntry.registration = newRegistration;
+                        historyEntry.parkSpot = parkSpot;
+                        await connectDB.getRepository(ParkSpotHistory).save(historyEntry);
 
+                        res.json({
+                            message: "Registration number updated successfully!",
+                        });
+                    }
+                }
+            }
+        } else {
+            res.json({
+                error: "Parking spot not found.",
+            });
+        }
+    } catch (err) {
         res.json({
-            message: "Values updated successfully!"
-        })
+            error: err,
+        });
+    }
+});
 
-    }
-    else {
+
+router.put("/release/:id", async (req: Request, res: Response) => {
+    try {
+        const parkSpotRepository = connectDB.getRepository(ParkSpot);
+        const parkSpot = await parkSpotRepository.findOne({
+            where: { id: parseInt(req.params.id), isOccupied: true },
+        });
+
+        if (parkSpot) {
+            parkSpot.isOccupied = false;
+            parkSpot.registration = ""; 
+
+            await parkSpotRepository.save(parkSpot);
+
+            res.json({
+                message: "Parking spot released successfully!",
+            });
+        } else {
+            res.json({
+                error: "Parking spot not found or is not occupied.",
+            });
+        }
+    } catch (err) {
         res.json({
-            error: "Values could not be updated"
-        })
+            error: err,
+        });
     }
-})
+});
+
 
 router.delete("/:id", async (req: Request, res: Response) => {
     await connectDB.getRepository(ParkSpot).delete(req.params.id);

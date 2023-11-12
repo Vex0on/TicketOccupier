@@ -1,7 +1,7 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, BeforeInsert, Unique } from "typeorm";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, BeforeUpdate, Unique, OneToMany } from "typeorm";
+import { ParkSpotHistory } from "./ParkSpotHistory";
 
 @Entity()
-@Unique(["registration"])
 export class ParkSpot extends BaseEntity {
     @PrimaryGeneratedColumn() 
     id!: number;
@@ -15,10 +15,13 @@ export class ParkSpot extends BaseEntity {
     @Column({ default: false })
     isOccupied!: boolean;
 
-    @BeforeInsert()
+    @BeforeUpdate()
     updateOccupiedStatus() {
         if (this.registration !== null && this.registration !== undefined && this.registration !== "") {
             this.isOccupied = true;
         }
     }
+
+    @OneToMany(() => ParkSpotHistory, (history) => history.parkSpot)
+    history?: ParkSpotHistory[];
 }
