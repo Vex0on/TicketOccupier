@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,13 @@ export class DataService {
   private apiUrl = 'http://localhost:3000/api';
 
   constructor() {}
+
+  private handleResponse(response: Response): any {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  }
 
   getParkSpots(): Observable<any[]> {
     console.log('Getting park spots...');
@@ -26,22 +34,22 @@ export class DataService {
     });
   }
 
-  getSpotHistory(id: number): Observable<any> {
-    return new Observable(observer => {
+  getSpotHistory(id: number): Observable<any[]> {
+    return new Observable((observer) => {
       fetch(`${this.apiUrl}/parkSpots/${id}`)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => this.handleResponse(response))
+        .then((data) => {
           console.log('Received history data:', data);
           observer.next(data);
           observer.complete();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error fetching spot history:', error);
           observer.error(error);
         });
     });
   }
-
+  
   releaseParkSpot(id: number): Observable<any> {
     return new Observable(observer => {
       fetch(`${this.apiUrl}/parkSpots/release/${id}`, {
