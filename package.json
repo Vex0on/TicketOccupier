@@ -9,7 +9,7 @@
     "startback": "nodemon --exec ts-node src/index.ts",
     "startfront": "cd ParkingOccupyApp && ng serve --host 0.0.0.0 --port 3000",
     "start2": "concurrently \"nodemon --exec ts-node src/index.ts\" \"cd ParkingOccupyApp && ng serve\"",
-    "build": "npm install && cd ParkingOccupyApp && npm install --force && yarn add -D concurrently"
+    "build": "npm install && cd ParkingOccupyApp && npm install --force && yarn add -D concurrently && ng build --configuration=production"
   },
   "keywords": [],
   "author": "Vex0on <Iplayagame101@gmail.com>",
