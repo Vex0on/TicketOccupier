@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn load-parking-spots && nodemon --exec ts-node src/index.ts",
-    "load-parking-spots": "ts-node scripts/loadParkingSpots.ts"
+    "load-parking-spots": "ts-node scripts/loadParkingSpots.ts",
+    "start2": "concurrently \"nodemon --exec ts-node src/index.ts\" \"cd ParkingOccupyApp && ng serve\"",
+    "build": "npm install && cd ParkingOccupyApp && npm install --force && yarn add -D concurrently"
   },
   "keywords": [],
   "author": "Vex0on <Iplayagame101@gmail.com>",
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.9.0",
+    "concurrently": "^8.2.2",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
