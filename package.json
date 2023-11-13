@@ -6,7 +6,8 @@
   "scripts": {
     "start": "yarn load-parking-spots && nodemon --exec ts-node src/index.ts",
     "load-parking-spots": "ts-node scripts/loadParkingSpots.ts",
-    "start2": "concurrently \"nodemon --exec ts-node src/index.ts\" \"cd ParkingOccupyApp && ng serve\"",
+    "startback": "nodemon --exec ts-node src/index.ts",
+    "startfront": "cd ParkingOccupyApp && ng serve",
     "build": "npm install && cd ParkingOccupyApp && npm install --force && yarn add -D concurrently"
   },
   "keywords": [],
