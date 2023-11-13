@@ -10,9 +10,7 @@ const connectDB =  new DataSource({
     synchronize: true,
     entities: ["./src/Entities/**/*.ts"],
     extra: {
-        ssl: {
-            rejectUnauthorized: false
-        }
+        ssl: false
     }
 })
 
