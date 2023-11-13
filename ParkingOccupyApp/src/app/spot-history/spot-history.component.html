@@ -4,11 +4,11 @@
       <div class="left-side">
         <h1>Parking Occupation App</h1>
       </div>
-      <!-- <div class="parking-container">
-        <div *ngFor="let entry of history$ | async">
+      <div class="parking-container">
+        <div *ngFor="let entry of history$">
           <p>{{ entry.id }} - {{ entry.registration }} - {{ entry.timestamp }}</p>
-        </div> -->
-      <!-- </div> -->
+        </div>
+      </div>
       <pre style="color: aliceblue;">
         {{ historyJSON }}
       </pre>
