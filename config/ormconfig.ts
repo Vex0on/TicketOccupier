@@ -10,9 +10,11 @@ const connectDB =  new DataSource({
     synchronize: true,
     entities: ["./src/Entities/**/*.ts"],
     extra: {
-        ssl: false
+        ssl: {
+            rejectUnauthorized: false
+        }
     }
-})
+});
 
 connectDB
     .initialize()
