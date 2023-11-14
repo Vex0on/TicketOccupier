@@ -1,9 +1,12 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
   "newProjectRoot": "projects",
   "projects": {
-    "ParkingOccupyApp": {
+    "myApp": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -11,11 +14,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/parking-occupy-app",
+            "outputPath": "dist",
+            "baseHref": "/",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -46,9 +50,12 @@
               "outputHashing": "all"
             },
             "development": {
+              "buildOptimizer": false,
               "optimization": false,
+              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -57,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ParkingOccupyApp:build:production"
+              "browserTarget": "myApp:build:production"
             },
             "development": {
-              "buildTarget": "ParkingOccupyApp:build:development"
+              "browserTarget": "myApp:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -68,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ParkingOccupyApp:build"
+            "browserTarget": "myApp:build"
           }
         },
         "test": {
@@ -91,8 +98,5 @@
         }
       }
     }
-  },
-  "cli": {
-    "analytics": "feb1586f-1c80-4648-bf39-b8d12aba9a51"
   }
 }
