@@ -94,6 +94,15 @@ router.put("/:id", async (req: Request, res: Response) => {
                     res.json({
                         error: "Invalid registration number.",
                     });
+                }
+                    else if (newRegistration.length > 8) {
+                        res.json({
+                            error: "Registration is too long",
+                        });
+                    } else if (!isValidRegistrationNumberFormat(newRegistration)) {
+                        res.json({
+                            error: "Invalid number format, special characters in registration are not allowed",
+                        })
                 } else {
                     const existingRecord = await parkSpotRepository.findOne({
                         where: { registration: newRegistration, isOccupied: true },
@@ -162,5 +171,10 @@ router.put("/release/:id", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
     await connectDB.getRepository(ParkSpot).delete(req.params.id);
 })
+
+function isValidRegistrationNumberFormat(registrationNumber: string): boolean {
+    const regex = /^[a-zA-Z0-9 ]*$/; 
+    return regex.test(registrationNumber);
+}
 
 export default router;
