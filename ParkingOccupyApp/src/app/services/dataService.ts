@@ -29,6 +29,7 @@ export class DataService {
           observer.complete();
         })
         .catch(error => {
+          console.log(environment.apiUrl);
           console.error('Error fetching data:', error);
           observer.error(error);
         });
