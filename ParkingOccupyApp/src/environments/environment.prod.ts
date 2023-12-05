@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://ticketoccupierapp.onrender.com/api',
+    apiUrl: 'https://ticket-occupier-back.up.railway.app/api/',
   };
   
